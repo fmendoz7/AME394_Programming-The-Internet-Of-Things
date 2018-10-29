@@ -18,6 +18,8 @@ app.get("/", function (req, res) {
 });
 
 
+
+
 app.get("/getAverage", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   var from = parseInt(req.query.from);
