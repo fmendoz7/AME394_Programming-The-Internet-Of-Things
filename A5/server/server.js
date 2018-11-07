@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer');
 let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:nodemcu1234@smtp.gmail.com');
-//###############################################################################################
+//##############################################################################
 
 var MS = require("mongoskin");
 var express = require("express");
@@ -20,8 +20,6 @@ var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
 app.get("/", function (req, res) {
     res.redirect("/index.html");
 });
-
-
 
 
 app.get("/getAverage", function (req, res) {
@@ -45,12 +43,41 @@ app.get("/getAverage", function (req, res) {
 
 });
 
-//###############################################################################################
+
+app.get("/getValue", function (req, res) {
+  //res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
+});
+
+app.get("/setValue", function (req, res) {
+  VALUEt = parseFloat(req.query.t);
+  VALUEh = parseFloat(req.query.h);
+  VALUEtime = new Date().getTime();
+	var dataObj =
+  {
+		t: VALUEt,
+		h: VALUEh,
+		time: VALUEtime
+	}
+//##############################################################################
+//CONDITION TO CALL SENDEMAIL
+  if(VALUEt > 100)
+  {
+    sendEmail();
+  }
+//##############################################################################
+	db.collection("data").insert(dataObj, function(err,result){
+		console.log("added data: " + JSON.stringify(dataObj));
+	});
+  res.send(VALUEtime.toString());
+});
+//##############################################################################
+//SENDMAIL FUNCTION
 function sendEmail()
 {
   let message = {
     // Comma separated list of recipients
-    to: 'Test account <ame394fall2018@gmail.com>',
+    to: 'Francis Mendoza <fmendoz7@gmail.com>',
     subject: 'Button pressed',
     // plaintext body
     text: 'Button pressed!',
@@ -64,38 +91,7 @@ function sendEmail()
 	console.log(err,result);
   });
 }
-//###############################################################################################
-
-app.get("/getValue", function (req, res) {
-  //res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
-});
-
-app.get("/setValue", function (req, res)
-{
-  VALUEt = parseFloat(req.query.t);
-  VALUEh = parseFloat(req.query.h);
-  VALUEtime = new Date().getTime();
-	var dataObj =
-  {
-		t: VALUEt,
-		h: VALUEh,
-		time: VALUEtime
-	}
-
-  //###############################################################################################
-  //CONDITION TO CALL SENDEMAIL
-    if(Vt > 100)
-    {
-      sendEmail();
-    }
-  //###############################################################################################
-
-	db.collection("data").insert(dataObj, function(err,result){
-		console.log("added data: " + JSON.stringify(dataObj));
-	});
-  res.send(VALUEtime.toString());
-});
+//##############################################################################
 
 app.use(methodOverride());
 app.use(bodyParser());
