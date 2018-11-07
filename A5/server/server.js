@@ -1,3 +1,7 @@
+var nodemailer = require('nodemailer');
+let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:nodemcu1234@smtp.gmail.com');
+//###############################################################################################
+
 var MS = require("mongoskin");
 var express = require("express");
 var app = express();
@@ -56,12 +60,41 @@ app.get("/setValue", function (req, res) {
 		h: VALUEh,
 		time: VALUEtime
 	}
+
 	db.collection("data").insert(dataObj, function(err,result){
 		console.log("added data: " + JSON.stringify(dataObj));
 	});
   res.send(VALUEtime.toString());
 });
 
+//###############################################################################################
+function sendEmail()
+{
+  let message = {
+    // Comma separated list of recipients
+    to: 'Test account <ame394fall2018@gmail.com>',
+    subject: 'Button pressed',
+    // plaintext body
+    text: 'Button pressed!',
+    // HTML body
+    html:  '<p>Your button was presssed </p>',
+    watchHtml:  '<p>Your button was presssed </p>'
+  }
+
+  console.log('Sending Mail');
+  transporter.sendMail(message, function(err, result){
+	console.log(err,result);
+  });
+}
+//###############################################################################################
+
+//###############################################################################################
+//CONDITION TO CALL SENDEMAIL
+  if(t > 100)
+  {
+    sendEmail();
+  }
+//###############################################################################################
 
 app.use(methodOverride());
 app.use(bodyParser());
