@@ -77,7 +77,7 @@ function sendEmail()
 {
   let message = {
     // Comma separated list of recipients
-    to: 'Francis Mendoza <fmendoz7@gmail.com>',
+    to: 'Francis Mendoza <fmendoz7@asu.edu>',
     subject: 'Button pressed',
     // plaintext body
     text: 'Button pressed!',
