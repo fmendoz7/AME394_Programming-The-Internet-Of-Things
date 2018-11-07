@@ -61,7 +61,7 @@ app.get("/setValue", function (req, res) {
 	}
 //##############################################################################
 //CONDITION TO CALL SENDEMAIL
-  if(VALUEt > 100)
+  if(VALUEt > 60)
   {
     sendEmail();
   }
