@@ -45,28 +45,6 @@ app.get("/getAverage", function (req, res) {
 
 });
 
-
-app.get("/getValue", function (req, res) {
-  //res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
-});
-
-app.get("/setValue", function (req, res) {
-  VALUEt = parseFloat(req.query.t);
-  VALUEh = parseFloat(req.query.h);
-  VALUEtime = new Date().getTime();
-	var dataObj = {
-		t: VALUEt,
-		h: VALUEh,
-		time: VALUEtime
-	}
-
-	db.collection("data").insert(dataObj, function(err,result){
-		console.log("added data: " + JSON.stringify(dataObj));
-	});
-  res.send(VALUEtime.toString());
-});
-
 //###############################################################################################
 function sendEmail()
 {
@@ -88,13 +66,36 @@ function sendEmail()
 }
 //###############################################################################################
 
-//###############################################################################################
-//CONDITION TO CALL SENDEMAIL
-  if(t > 100)
+app.get("/getValue", function (req, res) {
+  //res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
+});
+
+app.get("/setValue", function (req, res)
+{
+  VALUEt = parseFloat(req.query.t);
+  VALUEh = parseFloat(req.query.h);
+  VALUEtime = new Date().getTime();
+	var dataObj =
   {
-    sendEmail();
-  }
-//###############################################################################################
+		t: VALUEt,
+		h: VALUEh,
+		time: VALUEtime
+	}
+
+  //###############################################################################################
+  //CONDITION TO CALL SENDEMAIL
+    if(Vt > 100)
+    {
+      sendEmail();
+    }
+  //###############################################################################################
+
+	db.collection("data").insert(dataObj, function(err,result){
+		console.log("added data: " + JSON.stringify(dataObj));
+	});
+  res.send(VALUEtime.toString());
+});
 
 app.use(methodOverride());
 app.use(bodyParser());
