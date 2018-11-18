@@ -1,0 +1,43 @@
+<html>
+<head>
+<script src='asyncReq.js'></script>
+<script>
+function getDataFromServer()
+{
+	var from = 0;
+	var to = new Date().getTime();
+
+
+
+	var url = "./getAverage?from=" + from + "&to=" + to;
+	var callback = function(data){
+		console.log(data, typeof data);
+		var args = data.split(" ");
+		console.log(args);
+		var t = args[0];
+		var h = args[1];
+		var time = args[2];
+
+		var output =
+		"<h2> Temperature </h2> <p>" + t + " &deg; F</p>"+
+		"<h2> Humidity </h2> <p>" + h + " %</p>";
+		//"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
+
+		document.getElementById("data").innerHTML = output;
+
+	}
+	loadFile(url, callback);
+}
+
+
+</script>
+</head>
+
+<body style='text-align:center; font-family:Helvetica' onload='getDataFromServer()'>
+	<h1> Weather </h1>
+	<h2> (daily average) </h2>
+	<input type="date" id='userDate' onchange="getDataFromServer()">
+	<div id='data'></div>
+
+</body>
+</html>

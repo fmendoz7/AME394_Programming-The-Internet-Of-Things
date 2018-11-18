@@ -19,6 +19,7 @@ var tempDisplacement = 0;
 
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
+//(!!!)
 var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
 app.get("/", function (req, res) {
     res.redirect("/index.html");
@@ -39,9 +40,11 @@ app.get("/getAverage", function (req, res) {
   	var humSum = 0;
   	for(var i=0; i< result.length; i++)
     {
+      //Loop through to collect all temperature values
   		tempSum += result[i].t || 0;
   		humSum += result[i].h || 0;
   	}
+    //Divide total for sum
   	var tAvg = tempSum/result.length;
   	var hAvg = humSum/result.length;
     res.send(tAvg.toString() + " " + hAvg.toString() + "\r");

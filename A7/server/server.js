@@ -15,7 +15,6 @@ var port = 1234;
 var VALUEt = 0;
 var VALUEh = 0;
 var VALUEtime = 0;
-var tempDisplacement = 0;
 
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
@@ -29,16 +28,13 @@ app.get("/getAverage", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   var from = parseInt(req.query.from);
   var to = parseInt(req.query.to);
-  //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
   db.collection("data").find({time:{$gt:from, $lt:to}}).toArray(function(err, result){
   	console.log(err);
   	console.log(result);
   	var tempSum = 0;
   	var humSum = 0;
-  	for(var i=0; i< result.length; i++)
-    {
+  	for(var i=0; i< result.length; i++){
   		tempSum += result[i].t || 0;
   		humSum += result[i].h || 0;
   	}
@@ -67,15 +63,8 @@ app.get("/setValue", function (req, res) {
 	}
 //##############################################################################
 //CONDITION TO CALL SENDEMAIL
-  //currentDate
-  //tempDisplacement is the previous moment's date
-
-  //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
   if(VALUEt > 60)
   {
-    var currentDate = new Date();
-    if(currentDate.getTime() >= tempDisplacement + 300000)
-    tempDisplacement = date.getTime();
     sendEmail();
   }
 //##############################################################################
@@ -93,12 +82,8 @@ function sendEmail()
     to: 'Francis Mendoza <fmendoz7@asu.edu>',
     subject: 'Button pressed',
     // plaintext body
-
-    //MODIFY TO GET REAL TIME STATEMENT
     text: 'Button pressed!',
     // HTML body
-
-    //Can view as plain text HTML
     html:  '<p>Your button was presssed </p>',
     watchHtml:  '<p>Your button was presssed </p>'
   }
