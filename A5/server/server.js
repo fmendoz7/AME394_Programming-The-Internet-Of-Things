@@ -17,14 +17,13 @@ var VALUEh = 0;
 var VALUEtime = 0;
 var tempDisplacement = 0;
 
-
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
 var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
 app.get("/", function (req, res) {
     res.redirect("/index.html");
 });
 
-
+//----------------------------------------------------------------------------
 app.get("/getAverage", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   var from = parseInt(req.query.from);
@@ -48,13 +47,32 @@ app.get("/getAverage", function (req, res) {
   });
 
 });
+//##############################################################################
+//(!!!) TWO NEW HELPER FUNCTIONS ADDED TO PULL DATA
 
+//GETS LATEST DATA
+app.get("/getLatest", function (req, res) {
+  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result){
+    res.send(JSON.stringify(result));
+  });
+});
 
+//GETS DATA
+app.get("/getData", function (req, res) {
+  var from = parseInt(req.query.from);
+  var to = parseInt(req.query.to);
+  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result){
+    res.send(JSON.stringify(result));
+  });
+});
+//##############################################################################
+//GETVALUE METHOD
 app.get("/getValue", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
 });
-
+//----------------------------------------------------------------------------
+//SETVALUE METHOD
 app.get("/setValue", function (req, res) {
   VALUEt = parseFloat(req.query.t);
   VALUEh = parseFloat(req.query.h);
@@ -84,31 +102,31 @@ app.get("/setValue", function (req, res) {
 	});
   res.send(VALUEtime.toString());
 });
-//##############################################################################
-//SENDMAIL FUNCTION
-function sendEmail()
-{
-  let message = {
-    // Comma separated list of recipients
-    to: 'Francis Mendoza <fmendoz7@asu.edu>',
-    subject: 'Button pressed',
-    // plaintext body
+    //##############################################################################
+    //SENDMAIL FUNCTION
+    function sendEmail()
+    {
+      let message = {
+        // Comma separated list of recipients
+        to: 'Francis Mendoza <fmendoz7@asu.edu>',
+        subject: 'Button pressed',
+        // plaintext body
 
-    //MODIFY TO GET REAL TIME STATEMENT
-    text: 'Button pressed!',
-    // HTML body
+        //MODIFY TO GET REAL TIME STATEMENT
+        text: 'Button pressed!',
+        // HTML body
 
-    //Can view as plain text HTML
-    html:  '<p>Your button was presssed </p>',
-    watchHtml:  '<p>Your button was presssed </p>'
-  }
+        //Can view as plain text HTML
+        html:  '<p>Your button was presssed </p>',
+        watchHtml:  '<p>Your button was presssed </p>'
+      }
 
-  console.log('Sending Mail');
-  transporter.sendMail(message, function(err, result){
-	console.log(err,result);
-  });
-}
-//##############################################################################
+      console.log('Sending Mail');
+      transporter.sendMail(message, function(err, result){
+    	console.log(err,result);
+      });
+    }
+    //##############################################################################
 
 app.use(methodOverride());
 app.use(bodyParser());
