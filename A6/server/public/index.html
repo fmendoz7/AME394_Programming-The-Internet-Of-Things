@@ -7,9 +7,10 @@ function getDataFromServer()
 //----------------------------------------------------------------------
 	/*//Essentially calculates the running average for all values that day
 	//var from = new Date().getTime(0,0,0,0);
-	//var to = new Date().getTime(23,59,59,0);
-	var day = new Date(document.getElementById("userDate").value);
+	//var to = new Date().getTime(23,59,59,0);*/
 
+	//(!!!) -- Do we need this line?? --
+	//var day = new Date(document.getElementById("userDate").value);
 
 	//var from = new Date().getMilliSeconds(0);
 	//var to = new Date().getMilliSeconds(86399000);
@@ -17,7 +18,7 @@ function getDataFromServer()
 
 //(!!!) MISCONSTRUED SETTER FUNCTION
 	var from = day.setHours(0,0);
-	var to = day.setHours(24,0);*/
+	var to = day.setHours(24,0);
 
 	var selectDate = new Date(document.getElementById('userDate').value);
 	console.log(selectDate);
@@ -25,8 +26,10 @@ function getDataFromServer()
 	//Select date is decided by setHours function
 	var from = selectDate.setHours(0,0);
 	console.log(from);
+
 	var to = selectDate.setHours(23,59);
 	console.log(to);
+	console.log("Beginning and End Dates calculated successfully");
 
 
 //----------------------------------------------------------------------
@@ -36,6 +39,8 @@ function getDataFromServer()
 
 	//(!!!)Recent Change
 	console.log(url);
+
+	console.log("Before using callback");
 
 	//Function expression
 	var callback = function(data)
@@ -47,12 +52,16 @@ function getDataFromServer()
 		var h = args[1];
 		var time = args[2];
 
+		console.log("Before displaying average temperature and humidity");
+
 		//(!!!) RUNNING AVERAGE NOT DISPLAYED
 		var output =
 		//CURRENT TEMPERATURE AND HUMIDITY
 		"<h2> Temperature </h2> <p>" + t + " &deg; F</p>"+
 		"<h2> Humidity </h2> <p>" + h + " %</p>"
 		+ "<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
+
+		console.log("After display");
 
 		//AVERAGE TEMPERATURE AND HUMIDITY
 			//"<h2> Average Temperature </h2> <p>" + tAvg + " &deg; F</p>"+
