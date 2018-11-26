@@ -114,7 +114,7 @@ app.get("/setValue", function (req, res)
 	});
   console.log(dataObj);
   console.log("We are getting data!");
-  
+
   res.send(VALUEtime.toString());
 });
     //##############################################################################
