@@ -29,6 +29,8 @@ function getDataFromServer()
 
 	var to = selectDate.setHours(23,59);
 	console.log(to);
+
+	//(!!!) 11/26/18 NA
 	console.log("Beginning and End Dates calculated successfully");
 
 
@@ -40,6 +42,7 @@ function getDataFromServer()
 	//(!!!)Recent Change
 	console.log(url);
 
+	//(!!!) 11/26/18 NA
 	console.log("Before using callback");
 
 	//Function expression
@@ -52,16 +55,15 @@ function getDataFromServer()
 		var h = args[1];
 		var time = args[2];
 
+		//(!!!) 11/26/18 NA
 		console.log("Before displaying average temperature and humidity");
 
 		//(!!!) RUNNING AVERAGE NOT DISPLAYED
 		var output =
 		//CURRENT TEMPERATURE AND HUMIDITY
-		"<h2> Temperature </h2> <p>" + t + " &deg; F</p>"+
-		"<h2> Humidity </h2> <p>" + h + " %</p>"
+		"<h2> Average Temperature </h2> <p>" + t + " &deg; F</p>"+
+		"<h2> Average Humidity </h2> <p>" + h + " %</p>"
 		+ "<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
-
-		console.log("After display");
 
 		//AVERAGE TEMPERATURE AND HUMIDITY
 			//"<h2> Average Temperature </h2> <p>" + tAvg + " &deg; F</p>"+
@@ -70,6 +72,9 @@ function getDataFromServer()
 
 		document.getElementById("data").innerHTML = output;
 	}
+	//(!!!) 11/26/18 NA
+	console.log("After display");
+
 	loadFile(url, callback);
 }
 //----------------------------------------------------------------------
