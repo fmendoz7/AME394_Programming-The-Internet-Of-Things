@@ -24,7 +24,7 @@ function getDataFromServer()
 	//var to = day.setHours(24,0);
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-	var selectDate = new Date(document.getElementById('userDate').value);
+	var selectDate = new Date(document.getElementById('userDate').value).getTime();
 	console.log(selectDate);
 
 	//Select date is decided by setHours function
