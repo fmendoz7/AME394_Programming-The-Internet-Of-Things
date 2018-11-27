@@ -1,13 +1,9 @@
-/*  Programmer: Francis Mendoza
-    Date: 11/27/2018, 01:04 hours MST
-    Assignment: A5 (calculate average from selected date)
-*/
-
-//Nodemailer dependency
 var nodemailer = require('nodemailer');
-let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
 
-//______________________________________________________________________
+//THIS LINE ALLOWS YOU CHOOSE THE SENDER FOR THE GMAIL ACCOUNT
+let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
+//##############################################################################
+
 var MS = require("mongoskin");
 var express = require("express");
 var app = express();
@@ -19,11 +15,7 @@ var port = 1234;
 var VALUEt = 0;
 var VALUEh = 0;
 var VALUEtime = 0;
-
-//----------------------------------------------------------------------------
-//nA: tempDisplacement variable
 var tempDisplacement = 0;
-//----------------------------------------------------------------------------
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
 var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
@@ -31,17 +23,21 @@ app.get("/", function (req, res) {
     res.redirect("/index.html");
 });
 
+//----------------------------------------------------------------------------
 app.get("/getAverage", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   var from = parseInt(req.query.from);
   var to = parseInt(req.query.to);
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   db.collection("data").find({time:{$gt:from, $lt:to}}).toArray(function(err, result){
   	console.log(err);
   	console.log(result);
   	var tempSum = 0;
   	var humSum = 0;
-  	for(var i=0; i< result.length; i++){
+  	for(var i=0; i< result.length; i++)
+    {
   		tempSum += result[i].t || 0;
   		humSum += result[i].h || 0;
   	}
@@ -51,57 +47,48 @@ app.get("/getAverage", function (req, res) {
   });
 
 });
+//##############################################################################
+//(!!!) TWO NEW HELPER FUNCTIONS ADDED TO PULL DATA
 
-//----------------------------------------------------------------------------
-//nA: HELPER FUNCTIONS TO PULL DATA
-
-//nA: GETS LATEST DATA
-app.get("/getLatest", function (req, res)
-{
-  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result)
-  {
+//GETS LATEST DATA
+app.get("/getLatest", function (req, res) {
+  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result){
     res.send(JSON.stringify(result));
-    //Sending the collection of data as a string
   });
 });
 
-//nA: GETS DATA
-app.get("/getData", function (req, res)
-{
+//GETS DATA
+app.get("/getData", function (req, res) {
   var from = parseInt(req.query.from);
   var to = parseInt(req.query.to);
-  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result)
-  {
+  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result){
     res.send(JSON.stringify(result));
   });
 });
-//----------------------------------------------------------------------------
-
+//##############################################################################
+//GETVALUE METHOD
 app.get("/getValue", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
 });
-
+//----------------------------------------------------------------------------
+//SETVALUE METHOD
 app.get("/setValue", function (req, res) {
   VALUEt = parseFloat(req.query.t);
   VALUEh = parseFloat(req.query.h);
   VALUEtime = new Date().getTime();
-	var dataObj = {
+	var dataObj =
+  {
 		t: VALUEt,
 		h: VALUEh,
 		time: VALUEtime
 	}
-	db.collection("data").insert(dataObj, function(err,result){
-		console.log("added data: " + JSON.stringify(dataObj));
-	});
-  res.send(VALUEtime.toString());
-});
+//##############################################################################
+//CONDITION TO CALL SENDEMAIL
+  //currentDate
+  //tempDisplacement is the previous moment's date
 
-//----------------------------------------------------------------------------
-//nA: SEND EMAIL FUNCTIONALITY
-
-  //nA: Condition to Send Email
-  console.log(data);
+  //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
   if(VALUEt > 60)
   {
     var currentDate = new Date();
@@ -109,22 +96,17 @@ app.get("/setValue", function (req, res) {
     tempDisplacement = date.getTime();
     sendEmail();
   }
-
-  //nA: Data Collection Object
-  db.collection("data").insert(dataObj, function(err,result){
-  		console.log("added data: " + JSON.stringify(dataObj));
-  	});
-    console.log(dataObj);
-    console.log("We are getting data!");
-
-    res.send(VALUEtime.toString());
-  });
-
-  //nA: SendEmail Function
-  function sendEmail()
-  {
-    let message =
+//##############################################################################
+	db.collection("data").insert(dataObj, function(err,result){
+		console.log("added data: " + JSON.stringify(dataObj));
+	});
+  res.send(VALUEtime.toString());
+});
+    //##############################################################################
+    //SENDMAIL FUNCTION
+    function sendEmail()
     {
+      let message = {
         // Comma separated list of recipients
         to: 'Francis Mendoza <fmendoz7@asu.edu>',
         subject: 'Button pressed',
@@ -140,12 +122,11 @@ app.get("/setValue", function (req, res) {
       }
 
       console.log('Sending Mail');
-      transporter.sendMail(message, function(err, result)
-      {
-      console.log(err,result);
+      transporter.sendMail(message, function(err, result){
+    	console.log(err,result);
       });
-  }
-//----------------------------------------------------------------------------
+    }
+    //##############################################################################
 
 app.use(methodOverride());
 app.use(bodyParser());
