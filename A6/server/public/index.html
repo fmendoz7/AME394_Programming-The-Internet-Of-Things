@@ -16,9 +16,13 @@ function getDataFromServer()
 	//var to = new Date().getMilliSeconds(86399000);
 		//Format from getTime in hours, min, seconds, milliseconds
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //(!!!) MISCONSTRUED SETTER FUNCTION
-	var from = day.setHours(0,0);
-	var to = day.setHours(24,0);
+
+	//(!!!)>>WHERE DID THESE TWO COME FROM>>>>
+	//var from = day.setHours(0,0);
+	//var to = day.setHours(24,0);
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	var selectDate = new Date(document.getElementById('userDate').value);
 	console.log(selectDate);
@@ -26,17 +30,14 @@ function getDataFromServer()
 	//Select date is decided by setHours function
 	var from = selectDate.setHours(0,0);
 	console.log(from);
-
 	var to = selectDate.setHours(23,59);
 	console.log(to);
 
 	//(!!!) 11/26/18 NA
 	console.log("Beginning and End Dates calculated successfully");
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
-//----------------------------------------------------------------------
 	var url = "./getAverage?from=" + from + "&to=" + to;
-
 		//Basically can type this into URL
 
 	//(!!!)Recent Change
