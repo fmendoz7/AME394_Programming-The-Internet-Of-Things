@@ -1,5 +1,9 @@
 var nodemailer = require('nodemailer');
 let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:fmendoz7@asu.edu');
+
+//nA: mongo
+var MS = require("mongoskin");
+
 var express = require("express");
 var app = express();
 var bodyParser = require('body-parser');
@@ -8,6 +12,9 @@ var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 1234;
 var lastSend = 0;
+
+//nA: mongoskin
+var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 
 app.get("/setValue", function (req, res)
 {
