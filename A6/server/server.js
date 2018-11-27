@@ -3,7 +3,7 @@ var nodemailer = require('nodemailer');
 //THIS LINE ALLOWS YOU CHOOSE THE SENDER FOR THE GMAIL ACCOUNT
 
 //>>> DISCREP <<<
-var transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
+let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
 //##############################################################################
 
 var MS = require("mongoskin");
@@ -20,7 +20,7 @@ var VALUEtime = 0;
 var tempDisplacement = 0;
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
-var db = MS.db("mongodb://admin:123456@localhost:27017/sensorData");
+var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
 app.get("/", function (req, res)
 {
     res.redirect("/index.html");
@@ -49,7 +49,7 @@ app.get("/getAverage", function (req, res)
   	var tAvg = tempSum/result.length;
   	var hAvg = humSum/result.length;
     console.log(tAvg, hAvg);
-    res.send(tAvg.toString() + " " + hAvg.toString() + " " + from.toString() + "\r");
+    res.send(tAvg.toString() + " " + hAvg.toString() + "\r");
   });
 
 });
@@ -61,8 +61,8 @@ app.get("/getLatest", function (req, res)
 {
   db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result)
   {
-      res.send(JSON.stringify(result));
-      //Sending the collection of data as a string
+    res.send(JSON.stringify(result));
+    //Sending the collection of data as a string
   });
 });
 
@@ -73,7 +73,7 @@ app.get("/getData", function (req, res)
   var to = parseInt(req.query.to);
   db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result)
   {
-      res.send(JSON.stringify(result));
+    res.send(JSON.stringify(result));
   });
 });
 //##############################################################################
@@ -95,22 +95,20 @@ app.get("/setValue", function (req, res)
 		t: VALUEt,
 		h: VALUEh,
 		time: VALUEtime
-	};
-  //##############################################################################
-  //CONDITION TO CALL SENDEMAIL
-    //currentDate
-    //tempDisplacement is the previous moment's date
+	}
+//##############################################################################
+//CONDITION TO CALL SENDEMAIL
+  //currentDate
+  //tempDisplacement is the previous moment's date
 
-    //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
+  //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
   console.log(data);
   if(VALUEt > 60)
   {
     var currentDate = new Date();
     if(currentDate.getTime() >= tempDisplacement + 300000)
-    {
-      tempDisplacement = date.getTime();
-      sendEmail(VALUEt, currentDate);
-    }
+    tempDisplacement = date.getTime();
+    sendEmail();
   }
 //##############################################################################
 	db.collection("data").insert(dataObj, function(err,result){
@@ -123,9 +121,9 @@ app.get("/setValue", function (req, res)
 });
     //##############################################################################
     //SENDMAIL FUNCTION
-    function sendEmail(tempInput, timeInput)
+    function sendEmail()
     {
-      var message =
+      let message =
       {
           // Comma separated list of recipients
           to: 'Francis Mendoza <fmendoz7@asu.edu>',
@@ -144,7 +142,7 @@ app.get("/setValue", function (req, res)
         console.log('Sending Mail');
         transporter.sendMail(message, function(err, result)
         {
-      	   console.log(err,result);
+      	console.log(err,result);
         });
     }
     //##############################################################################

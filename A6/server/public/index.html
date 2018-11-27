@@ -16,28 +16,27 @@ function getDataFromServer()
 	//var to = new Date().getMilliSeconds(86399000);
 		//Format from getTime in hours, min, seconds, milliseconds
 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //(!!!) MISCONSTRUED SETTER FUNCTION
+	var from = day.setHours(0,0);
+	var to = day.setHours(24,0);
 
-	//(!!!)>>WHERE DID THESE TWO COME FROM>>>>
-	//var from = day.setHours(0,0);
-	//var to = day.setHours(24,0);
-	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-	var selectDate = new Date(document.getElementById('userDate').value).getTime();
+	var selectDate = new Date(document.getElementById('userDate').value);
 	console.log(selectDate);
 
 	//Select date is decided by setHours function
 	var from = selectDate.setHours(0,0);
 	console.log(from);
+
 	var to = selectDate.setHours(23,59);
 	console.log(to);
 
 	//(!!!) 11/26/18 NA
 	console.log("Beginning and End Dates calculated successfully");
-	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+
+//----------------------------------------------------------------------
 	var url = "./getAverage?from=" + from + "&to=" + to;
+
 		//Basically can type this into URL
 
 	//(!!!)Recent Change
@@ -55,10 +54,6 @@ function getDataFromServer()
 		var t = args[0];
 		var h = args[1];
 		var time = args[2];
-		var temp = parseInt(t);
-		temp = temp.toFixed(2);
-		var hum = parseInt(t);
-		hum = hum.toFixed(2);
 
 		//(!!!) 11/26/18 NA
 		console.log("Before displaying average temperature and humidity");
@@ -66,8 +61,8 @@ function getDataFromServer()
 		//(!!!) RUNNING AVERAGE NOT DISPLAYED
 		var output =
 		//CURRENT TEMPERATURE AND HUMIDITY
-		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
-		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"
+		"<h2> Average Temperature </h2> <p>" + t + " &deg; F</p>"+
+		"<h2> Average Humidity </h2> <p>" + h + " %</p>"
 		+ "<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
 
 		//AVERAGE TEMPERATURE AND HUMIDITY
