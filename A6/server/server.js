@@ -9,36 +9,14 @@ var port = 1234;
 var VALUEt = 0;
 var VALUEh = 0;
 var VALUEtime = 0;
-var tempCheck = 0;
-var nodemailer = require('nodemailer');
 
-var transporter = nodemailer.createTransport('smtp://Garrett%40akosweb.com:Elvis1234@smtp.gmail.com');
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
-var db = MS.db("mongodb://admin:123456@localhost:27017/sensorData");
+var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
 app.get("/", function (req, res) {
     res.redirect("/index.html");
 });
-function sendEmail(temp, time)
-{
-    var message = {
-        // Comma separated list of recipients
-        to: 'Garrett Miller <Littlegman96@gmail.com>',
-        subject: 'Temperature is over 100 degrees!!',
-        // plaintext body
-        text: 'The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time ,
-        // HTML body
-        html:  '<p> The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time + '</p>',
-        watchHtml:  '<p> The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time + '</p>'
-    };
 
-    console.log('Sending Mail');
-    transporter.sendMail(message, function(err, result){
-        console.log(err,result);
-    });
-
-
-}
 
 app.get("/getAverage", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
@@ -56,24 +34,12 @@ app.get("/getAverage", function (req, res) {
   	}
   	var tAvg = tempSum/result.length;
   	var hAvg = humSum/result.length;
-    res.send(tAvg.toString() + " " + hAvg.toString() + " " + from.toString() + "\r");
+    res.send(tAvg.toString() + " " + hAvg.toString() + "\r");
   });
 
 });
 
-app.get("/getLatest", function (req, res) {
-    db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result){
-        res.send(JSON.stringify(result));
-    });
-});
 
-app.get("/getData", function (req, res) {
-    var from = parseInt(req.query.from);
-    var to = parseInt(req.query.to);
-    db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result){
-        res.send(JSON.stringify(result));
-    });
-});
 app.get("/getValue", function (req, res) {
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
@@ -87,13 +53,6 @@ app.get("/setValue", function (req, res) {
 		t: VALUEt,
 		h: VALUEh,
 		time: VALUEtime
-	};
-	if(VALUEh > 80) {
-        var date = new Date(); // get the current date.
-        if(date.getTime() >= (tempCheck + 300000)) { // get the current time from the date object we just made, compare that to the previous date object, plus 5 minutes, if it's greater, send email
-            tempCheck = date.getTime();
-            sendEmail(VALUEt, date);
-		}
 	}
 	db.collection("data").insert(dataObj, function(err,result){
 		console.log("added data: " + JSON.stringify(dataObj));
