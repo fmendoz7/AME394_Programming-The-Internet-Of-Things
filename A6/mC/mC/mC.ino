@@ -27,7 +27,7 @@ SimpleDHT11 dht11(pinDHT11);
   //Preprocessor command that enables Wifi connection
 
 //CREATE WIFI NETWORK AND PASSWORD THAT LIMITS ACCESS TO WEBPAGE
-const char* ssid     = "Tejaswi";
+const char* ssid     = "Tejaswi2";
 const char* password = "12345678";
 
 /*const char* ssid     = "Vista Del Sol";

@@ -111,7 +111,7 @@ app.get("/setValue", function (req, res)
     var currentDate = new Date();
     if(currentDate.getTime() >= tempDisplacement + 300000)
     {
-      tempDisplacement = date.getTime();
+      tempDisplacement = currentDate.getTime();
       sendEmail(VALUEt, currentDate);
     }
   }
