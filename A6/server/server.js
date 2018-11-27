@@ -19,8 +19,11 @@ var VALUEh = 0;
 var VALUEtime = 0;
 var tempDisplacement = 0;
 
+//OfaZ13Q6DERS
+//
+
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
-var db = MS.db("mongodb://admin:123456@localhost:27017/sensorData");
+var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 app.get("/", function (req, res)
 {
     res.redirect("/index.html");
