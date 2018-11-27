@@ -12,7 +12,7 @@ var VALUEtime = 0;
 var tempCheck = 0;
 var nodemailer = require('nodemailer');
 
-var transporter = nodemailer.createTransport('smtp://Francis%40akosweb.com:francissamuelmendoza7@.gmail.com');
+var transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
 
 //var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
