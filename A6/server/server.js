@@ -1,7 +1,9 @@
 var nodemailer = require('nodemailer');
 
 //THIS LINE ALLOWS YOU CHOOSE THE SENDER FOR THE GMAIL ACCOUNT
-let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
+
+//>>> DISCREP <<<
+var transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
 //##############################################################################
 
 var MS = require("mongoskin");
@@ -18,20 +20,23 @@ var VALUEtime = 0;
 var tempDisplacement = 0;
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
-var db = MS.db("mongodb://user:pass@localhost:27017/sensorData")
-app.get("/", function (req, res) {
+var db = MS.db("mongodb://admin:123456@localhost:27017/sensorData");
+app.get("/", function (req, res)
+{
     res.redirect("/index.html");
 });
 
 //----------------------------------------------------------------------------
-app.get("/getAverage", function (req, res) {
+app.get("/getAverage", function (req, res)
+{
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   var from = parseInt(req.query.from);
   var to = parseInt(req.query.to);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  db.collection("data").find({time:{$gt:from, $lt:to}}).toArray(function(err, result){
+  db.collection("data").find({time:{$gt:from, $lt:to}}).toArray(function(err, result)
+  {
   	console.log(err);
   	console.log(result);
   	var tempSum = 0;
@@ -43,7 +48,8 @@ app.get("/getAverage", function (req, res) {
   	}
   	var tAvg = tempSum/result.length;
   	var hAvg = humSum/result.length;
-    res.send(tAvg.toString() + " " + hAvg.toString() + "\r");
+    console.log(tAvg, hAvg);
+    res.send(tAvg.toString() + " " + hAvg.toString() + " " + from.toString() + "\r");
   });
 
 });
@@ -51,29 +57,36 @@ app.get("/getAverage", function (req, res) {
 //(!!!) TWO NEW HELPER FUNCTIONS ADDED TO PULL DATA
 
 //GETS LATEST DATA
-app.get("/getLatest", function (req, res) {
-  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result){
-    res.send(JSON.stringify(result));
+app.get("/getLatest", function (req, res)
+{
+  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result)
+  {
+      res.send(JSON.stringify(result));
+      //Sending the collection of data as a string
   });
 });
 
 //GETS DATA
-app.get("/getData", function (req, res) {
+app.get("/getData", function (req, res)
+{
   var from = parseInt(req.query.from);
   var to = parseInt(req.query.to);
-  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result){
-    res.send(JSON.stringify(result));
+  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result)
+  {
+      res.send(JSON.stringify(result));
   });
 });
 //##############################################################################
 //GETVALUE METHOD
-app.get("/getValue", function (req, res) {
+app.get("/getValue", function (req, res)
+{
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   res.send(VALUEt.toString() + " " + VALUEh + " " + VALUEtime + "\r");
 });
 //----------------------------------------------------------------------------
 //SETVALUE METHOD
-app.get("/setValue", function (req, res) {
+app.get("/setValue", function (req, res)
+{
   VALUEt = parseFloat(req.query.t);
   VALUEh = parseFloat(req.query.h);
   VALUEtime = new Date().getTime();
@@ -82,49 +95,57 @@ app.get("/setValue", function (req, res) {
 		t: VALUEt,
 		h: VALUEh,
 		time: VALUEtime
-	}
-//##############################################################################
-//CONDITION TO CALL SENDEMAIL
-  //currentDate
-  //tempDisplacement is the previous moment's date
+	};
+  //##############################################################################
+  //CONDITION TO CALL SENDEMAIL
+    //currentDate
+    //tempDisplacement is the previous moment's date
 
-  //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
+    //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
+  console.log(data);
   if(VALUEt > 60)
   {
     var currentDate = new Date();
     if(currentDate.getTime() >= tempDisplacement + 300000)
-    tempDisplacement = date.getTime();
-    sendEmail();
+    {
+      tempDisplacement = date.getTime();
+      sendEmail(VALUEt, currentDate);
+    }
   }
 //##############################################################################
 	db.collection("data").insert(dataObj, function(err,result){
 		console.log("added data: " + JSON.stringify(dataObj));
 	});
+  console.log(dataObj);
+  console.log("We are getting data!");
+
   res.send(VALUEtime.toString());
 });
     //##############################################################################
     //SENDMAIL FUNCTION
-    function sendEmail()
+    function sendEmail(tempInput, timeInput)
     {
-      let message = {
-        // Comma separated list of recipients
-        to: 'Francis Mendoza <fmendoz7@asu.edu>',
-        subject: 'Button pressed',
-        // plaintext body
+      var message =
+      {
+          // Comma separated list of recipients
+          to: 'Francis Mendoza <fmendoz7@asu.edu>',
+          subject: 'Button pressed',
+          // plaintext body
 
-        //MODIFY TO GET REAL TIME STATEMENT
-        text: 'Button pressed!',
-        // HTML body
+          //MODIFY TO GET REAL TIME STATEMENT
+          text: 'Button pressed!',
+          // HTML body
 
-        //Can view as plain text HTML
-        html:  '<p>Your button was presssed </p>',
-        watchHtml:  '<p>Your button was presssed </p>'
-      }
+          //Can view as plain text HTML
+          html:  '<p>Your button was presssed </p>',
+          watchHtml:  '<p>Your button was presssed </p>'
+        }
 
-      console.log('Sending Mail');
-      transporter.sendMail(message, function(err, result){
-    	console.log(err,result);
-      });
+        console.log('Sending Mail');
+        transporter.sendMail(message, function(err, result)
+        {
+      	   console.log(err,result);
+        });
     }
     //##############################################################################
 
