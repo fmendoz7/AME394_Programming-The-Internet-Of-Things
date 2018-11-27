@@ -17,7 +17,7 @@ var port = 1234;
 var VALUEt = 0;
 var VALUEh = 0;
 var VALUEtime = 0;
-var tempDisplacement = 0;
+var tempCheck = 0;
 
 //var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
 var db = MS.db("mongodb://admin:123456@localhost:27017/sensorData");
@@ -48,7 +48,7 @@ app.get("/getAverage", function (req, res)
   	}
   	var tAvg = tempSum/result.length;
   	var hAvg = humSum/result.length;
-    console.log(tAvg, hAvg);
+
     res.send(tAvg.toString() + " " + hAvg.toString() + " " + from.toString() + "\r");
   });
 
@@ -59,22 +59,22 @@ app.get("/getAverage", function (req, res)
 //GETS LATEST DATA
 app.get("/getLatest", function (req, res)
 {
-  db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result)
-  {
-      res.send(JSON.stringify(result));
-      //Sending the collection of data as a string
-  });
+    db.collection("data").find({}).sort({time:-1}).limit(10).toArray(function(err, result)
+    {
+        res.send(JSON.stringify(result));
+        //Sending the collection of data as a string
+    });
 });
 
 //GETS DATA
 app.get("/getData", function (req, res)
 {
-  var from = parseInt(req.query.from);
-  var to = parseInt(req.query.to);
-  db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result)
-  {
-      res.send(JSON.stringify(result));
-  });
+    var from = parseInt(req.query.from);
+    var to = parseInt(req.query.to);
+    db.collection("data").find({time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result)
+    {
+        res.send(JSON.stringify(result));
+    });
 });
 //##############################################################################
 //GETVALUE METHOD
@@ -101,53 +101,46 @@ app.get("/setValue", function (req, res)
     //currentDate
     //tempDisplacement is the previous moment's date
 
-    //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
-  console.log(data);
-  if(VALUEt > 60)
+  //(!!!) MODIFY FOR BOTH TEMPERATURE AND HUMIDITY
+
+	if(VALUEh > 80)
   {
-    var currentDate = new Date();
-    if(currentDate.getTime() >= tempDisplacement + 300000)
-    {
-      tempDisplacement = date.getTime();
-      sendEmail(VALUEt, currentDate);
-    }
-  }
+        var date = new Date(); // get the current date.
+        if(date.getTime() >= (tempCheck + 300000))
+        { // get the current time from the date object we just made, compare that to the previous date object, plus 5 minutes, if it's greater, send email
+            tempCheck = date.getTime();
+            sendEmail(VALUEt, date);
+		    }
+	}
 //##############################################################################
 	db.collection("data").insert(dataObj, function(err,result){
 		console.log("added data: " + JSON.stringify(dataObj));
 	});
-  console.log(dataObj);
-  console.log("We are getting data!");
-
   res.send(VALUEtime.toString());
 });
-    //##############################################################################
-    //SENDMAIL FUNCTION
-    function sendEmail(tempInput, timeInput)
-    {
+  //##############################################################################
+  //SENDMAIL FUNCTION
+  function sendEmail(temp, time)
+  {
       var message =
       {
           // Comma separated list of recipients
-          to: 'Francis Mendoza <fmendoz7@asu.edu>',
-          subject: 'Button pressed',
+          to: 'Francis Mendoza <francissamuelmendoza7@gmail.com>',
+          subject: 'Temperature is over 100 degrees!!',
           // plaintext body
-
-          //MODIFY TO GET REAL TIME STATEMENT
-          text: 'Button pressed!',
+          text: 'The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time ,
           // HTML body
+          html:  '<p> The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time + '</p>',
+          watchHtml:  '<p> The temperature reached over 100 degrees, currently it is: ' + temp + '°F at ' + time + '</p>'
+      };
 
-          //Can view as plain text HTML
-          html:  '<p>Your button was presssed </p>',
-          watchHtml:  '<p>Your button was presssed </p>'
-        }
-
-        console.log('Sending Mail');
-        transporter.sendMail(message, function(err, result)
-        {
-      	   console.log(err,result);
-        });
-    }
-    //##############################################################################
+      console.log('Sending Mail');
+      transporter.sendMail(message, function(err, result)
+      {
+          console.log(err,result);
+      });
+  }
+  //##############################################################################
 
 app.use(methodOverride());
 app.use(bodyParser());
