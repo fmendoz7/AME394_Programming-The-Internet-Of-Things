@@ -4,73 +4,50 @@
 <script>
 function getDataFromServer()
 {
-//----------------------------------------------------------------------
-	/*//Essentially calculates the running average for all values that day
-	//var from = new Date().getTime(0,0,0,0);
-	//var to = new Date().getTime(23,59,59,0);
-	var day = new Date(document.getElementById("userDate").value);
+   	var selectDate = new Date(document.getElementById('userDate').value).getTime();
+   	console.log(selectDate);
+   	selectDate = selectDate + (3600000 * 24);
+	var	from = selectDate - (3600000 * 17);
+   	console.log(from);
+    var to = selectDate + (3600000 * 7);
+    console.log(to);
 
-
-	//var from = new Date().getMilliSeconds(0);
-	//var to = new Date().getMilliSeconds(86399000);
-		//Format from getTime in hours, min, seconds, milliseconds
-
-//(!!!) MISCONSTRUED SETTER FUNCTION
-	var from = day.setHours(0,0);
-	var to = day.setHours(24,0);*/
-
-	var selectDate = new Date(document.getElementById('userDate').value);
-	console.log(selectDate);
-
-	//Select date is decided by setHours function
-	var from = selectDate.setHours(0,0);
-	console.log(from);
-	var to = selectDate.setHours(23,59);
-	console.log(to);
-
-
-//----------------------------------------------------------------------
 	var url = "./getAverage?from=" + from + "&to=" + to;
-
-		//Basically can type this into URL
-
-	//(!!!)Recent Change
 	console.log(url);
-
-	//Function expression
-	var callback = function(data)
-	{
+	var callback = function(data){
 		console.log(data, typeof data);
 		var args = data.split(" ");
 		console.log(args);
 		var t = args[0];
 		var h = args[1];
+
+		var currentTemp = args[0];
+		var currentHum = args[1];
+
 		var time = args[2];
-
-		//(!!!) RUNNING AVERAGE NOT DISPLAYED
+		var temp = parseInt(t);
+		temp = temp.toFixed(2);
+		var hum = parseInt(h);
+		hum = hum.toFixed(2);
 		var output =
-		//CURRENT TEMPERATURE AND HUMIDITY
-		"<h2> Temperature </h2> <p>" + t + " &deg; F</p>"+
-		"<h2> Humidity </h2> <p>" + h + " %</p>"
-		+ "<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
-
-		//AVERAGE TEMPERATURE AND HUMIDITY
-			//"<h2> Average Temperature </h2> <p>" + tAvg + " &deg; F</p>"+
-			//"<h2> Average Humidity </h2> <p>" + hAvg + " %</p>";
-			//"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
+		"<h2> -- Current Temperature -- </h2> <p>" + currentTemp + " &deg; F</p>"+
+		"<h2> -- Current Humidity -- </h2> <p>" + currentHum + " %</p>" +
+		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
+		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"+
+		"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
 
 		document.getElementById("data").innerHTML = output;
+
 	}
 	loadFile(url, callback);
 }
-//----------------------------------------------------------------------
+
 
 </script>
 </head>
 
 <body style='text-align:center; font-family:Helvetica' onload='getDataFromServer()'>
-	<h1> Weather </h1>
-	<h2> (daily average) </h2>
+	<h1> IoT WEATHER HUB </h1>
 	<input type="date" id='userDate' onchange="getDataFromServer()">
 	<div id='data'></div>
 
