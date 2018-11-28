@@ -22,7 +22,7 @@ var VALUEh = 0;
 var VALUEtime = 0;
 var tempCheck = 0;
 //-----------------------------------------------------------------------------------------------------
-//var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
+//var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 app.get("/", function (req, res)
 {
