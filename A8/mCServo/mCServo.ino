@@ -8,6 +8,8 @@
  *  > Boilerplate for Wifi Hotspot for in-class demonstration
  */
 //##################################################################
+//nA: Stepper library
+#include <Stepper.h>
 #include <Wire.h> 
   //Preprocessor command that (passes data?)
 #include <LiquidCrystal_I2C.h>
@@ -25,17 +27,6 @@ SimpleDHT11 dht11(pinDHT11);
 //-----------------------------------------------------------
 #include <ESP8266WiFi.h>
   //Preprocessor command that enables Wifi connection
-
-   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //nA: servo functionality instantiation
-  #include <Stepper.h>
-  int Pin0 = D8; 
-  int Pin1 = D7; 
-  int Pin2 = D6; 
-  int Pin3 = D5; 
-  int _step = 0; 
-  boolean dir = true;// gre
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //CREATE WIFI NETWORK AND PASSWORD THAT LIMITS ACCESS TO WEBPAGE
 //const char* ssid     = "Tejaswi2";
@@ -58,16 +49,41 @@ const char* password = "12345678";*/
 //IP ADDRESS FOR AWS LIGHTSAIL INSTANCE OF SERVER
 const char* host = "34.222.19.236";
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//nA: servo buttons
+int blackTempButton = D0;
+int whiteHumButton = D3;
+int tempButtonState = 0;
+int humButtonState = 0;
+
+int directionState = 0;
+int currentDegree = 0;
+
+int Pin0 = D8; 
+int Pin1 = D7; 
+int Pin2 = D6; 
+int Pin3 = D5; 
+int _step = 0; 
+boolean dir = true;// gre
+
+unsigned long curMillis;
+unsigned long prevStepMillis = 0;
+unsigned long millisBetweenSteps = 25;
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //-----------------------------------------------------------
 void setup()
 {
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //nA: initialize servo pins
-   pinMode(Pin0, OUTPUT);  
-   pinMode(Pin1, OUTPUT);  
-   pinMode(Pin2, OUTPUT);  
-   pinMode(Pin3, OUTPUT); 
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //nA: servo Output
+  pinMode(Pin0, OUTPUT);  
+  pinMode(Pin1, OUTPUT);  
+  pinMode(Pin2, OUTPUT);  
+  pinMode(Pin3, OUTPUT); 
+
+  //nA: button
+  pinMode(blackTempButton, INPUT);
+  pinMode(whiteHumButton, INPUT);
+ //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   
   Serial.begin(115200);
   // initialize the LCD
@@ -116,9 +132,22 @@ void print2Screen(String s1, String s2)
 
 float t = 0;
 float h = 0;
+//---------------------------------------------------------------------------
+//nA: singleStep() method
+void singleStep() 
+{
+ if (curMillis - prevStepMillis >= millisBetweenSteps) {
+ prevStepMillis += millisBetweenSteps;
+ }
+}
+
+//----------------------------------------------------------------------------------------
 void loop()
 {
-
+  //nA: repositioned button state digital read
+  tempButtonState = digitalRead(blackTempButton);
+  humButtonState = digitalRead(whiteHumButton);
+  
   byte temperature = 0;
   byte humidity = 0;
   int err = SimpleDHTErrSuccess;
@@ -142,7 +171,6 @@ void loop()
 
   // DHT11 sampling rate is 1HZ.
   delay(1500);
-
  //################################################
  int value = 0;
 
@@ -201,10 +229,14 @@ void loop()
 
   //DHT11 sampling rate 1 HZ
   //delay(500);
-   
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //nA: switch statements for code
-  switch(_step){ 
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //nA: buttonState and switch statement
+  //tempButtonState = digitalRead(blackTempButton);
+  //humButtonState = digitalRead(whiteHumButton);
+
+  switch(_step)
+  { 
    case 0: 
      digitalWrite(Pin0, LOW);  
      digitalWrite(Pin1, LOW); 
@@ -258,7 +290,36 @@ void loop()
      digitalWrite(Pin1, LOW); 
      digitalWrite(Pin2, LOW); 
      digitalWrite(Pin3, LOW); 
-   break;
-   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   break;  
+ } 
+
+ //if(dir)
+ //nA: new condition
+ if(tempButtonState == HIGH)
+ { 
+   _step--; 
+ }
+
+ //nA: new condition
+ else if(humButtonState == HIGH)
+ {
+   _step++;
+ }
+ 
+ /*else
+ { 
+   _step--; 
+ } */
+ 
+ if(_step>7)
+ { 
+   _step=0; 
+ } 
+ if(_step<0)
+ { 
+   _step=7; 
+ } 
+ delay(1); 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
 
