@@ -20,14 +20,18 @@ function getDataFromServer()
 		console.log(args);
 		var t = args[0];
 		var h = args[1];
+
+		var currentTemp = t;
+		var currentHum = h;
+
 		var time = args[2];
 		var temp = parseInt(t);
 		temp = temp.toFixed(2);
 		var hum = parseInt(h);
 		hum = hum.toFixed(2);
 		var output =
-		"<h2> -- Current Temperature -- </h2> <p>" + t + " &deg; F</p>"+
-		"<h2> -- Current Humidity -- </h2> <p>" + h + " %</p>" +
+		"<h2> -- Current Temperature -- </h2> <p>" + currentTemp + " &deg; F</p>"+
+		"<h2> -- Current Humidity -- </h2> <p>" + currentHum + " %</p>" +
 		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
 		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"+
 		"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";

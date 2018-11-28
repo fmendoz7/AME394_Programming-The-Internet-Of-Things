@@ -6,7 +6,7 @@
 
 //Nodemailer functionality
 var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport('smtp://katomatsumoto1599%40gmail.com:francissamuelmendoza7@gmail.com');
+var transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
 //-----------------------------------------------------------------------------------------------------
 var MS = require("mongoskin");
 var express = require("express");
