@@ -20,14 +20,20 @@ function getDataFromServer()
 		console.log(args);
 		var t = args[0];
 		var h = args[1];
+
+		var currentTemp = args[0];
+		var currentHum = args[1];
+
 		var time = args[2];
 		var temp = parseInt(t);
 		temp = temp.toFixed(2);
 		var hum = parseInt(h);
 		hum = hum.toFixed(2);
 		var output =
-		"<h2> Temperature </h2> <p>" + temp.toString() + " &deg; F</p>"+
-		"<h2> Humidity </h2> <p>" + hum + " %</p>"+
+		"<h2> -- Current Temperature -- </h2> <p>" + currentTemp + " &deg; F</p>"+
+		"<h2> -- Current Humidity -- </h2> <p>" + currentHum + " %</p>" +
+		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
+		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"+
 		"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
 
 		document.getElementById("data").innerHTML = output;
@@ -41,7 +47,7 @@ function getDataFromServer()
 </head>
 
 <body style='text-align:center; font-family:Helvetica' onload='getDataFromServer()'>
-	<h1> Weather </h1>
+	<h1> IoT WEATHER HUB </h1>
 	<input type="date" id='userDate' onchange="getDataFromServer()">
 	<div id='data'></div>
 
