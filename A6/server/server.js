@@ -140,11 +140,11 @@ function sendEmail(temp, humid, time)
       text: 'At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid,
 
       //Can view as plain text HTML
-      html:  "<p> 'At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid,
- </p>",
-      watchHtml:  "<p> 'At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid,
- </p>"
-    }
+      html:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid +
+ '</p>',
+      watchHtml:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid +
+ '</p>'
+  };
 
     console.log('Sending Mail');
     transporter.sendMail(message, function(err, result)
