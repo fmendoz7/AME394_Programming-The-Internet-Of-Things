@@ -91,7 +91,7 @@ app.get("/setValue", function (req, res)
 	};
 
   //Condition for sensor to trip after 100*F
-	if(VALUEt > 30)
+	if(VALUEt > 100)
   {
         var date = new Date(); // get the current date.
         if(date.getTime() >= (tempCheck + 300000))
