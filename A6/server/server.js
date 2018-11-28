@@ -102,10 +102,11 @@ app.get("/setValue", function (req, res)
         if(date.getTime() >= (tempAssess + 300000))
         { // get the current time from the date object we just made, compare that to the previous date object, plus 5 minutes, if it's greater, send email
             tempAssess = date.getTime();
-            sendEmail(VALUEt, VALUEh, date);
+            sendEmail(VALUEt, date);
 		    }
 	}
 
+/*
   //(nA) Conditional: Humidity above 50%
   if(VALUEh > 100)
   {
@@ -116,7 +117,7 @@ app.get("/setValue", function (req, res)
             sendEmail(VALUEt, VALUEh, date);
         }
   }
-
+*/
   //MongoDB
 	db.collection("data").insert(dataObj, function(err,result)
   {
@@ -127,7 +128,7 @@ app.get("/setValue", function (req, res)
 });
 //---------------------------------------------------------------------------------------------------------
 //Function: sendEmail
-function sendEmail(temp, humid, time)
+function sendEmail(temp, time)
 {
   var message =
   {
@@ -137,13 +138,11 @@ function sendEmail(temp, humid, time)
       // plaintext body
 
       //Text to display trip and current temperature or humidity
-      text: 'At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid,
+      text: 'At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n',
 
       //Can view as plain text HTML
-      html:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid +
- '</p>',
-      watchHtml:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n\n Current Humidity: ' + humid +
- '</p>'
+      html:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n </p>',
+      watchHtml:  '<p> At ' + time + ' , temperature exceeded 100* F or humidity exceeded 50%.\n' + 'Current Temperature: ' + temp + '\n </p>'
   };
 
     console.log('Sending Mail');
