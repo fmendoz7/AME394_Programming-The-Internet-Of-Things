@@ -121,8 +121,8 @@ function sendEmail(temp, time)
       // HTML body
 
       //Can view as plain text HTML
-      html:  '<p> Sensor tripped at ' + time '. Temperature exceeded 100*F. \n Current Temperature: ' + temp </p>',
-      watchHtml:  '<p> Sensor tripped at ' + time '. Temperature exceeded 100*F. \n Current Temperature: ' + temp </p>'
+      html:  '<p> Sensor tripped at ' + time '. Temperature exceeded 100*F. \n Current Temperature: ' + temp + '</p>',
+      watchHtml:  '<p> Sensor tripped at ' + time '. Temperature exceeded 100*F. \n Current Temperature: ' + temp + '</p>'
     }
 
 
