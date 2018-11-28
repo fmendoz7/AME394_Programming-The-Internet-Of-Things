@@ -26,8 +26,10 @@ function getDataFromServer()
 		var hum = parseInt(h);
 		hum = hum.toFixed(2);
 		var output =
-		"<h2> Temperature </h2> <p>" + temp.toString() + " &deg; F</p>"+
-		"<h2> Humidity </h2> <p>" + hum + " %</p>"+
+		"<h2> -- Current Temperature -- </h2> <p>" + t + " &deg; F</p>"+
+		"<h2> -- Current Humidity -- </h2> <p>" + h + " %</p>" +
+		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
+		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"+
 		"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
 
 		document.getElementById("data").innerHTML = output;
