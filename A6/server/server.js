@@ -6,7 +6,8 @@
 
 //Nodemailer functionality
 var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
+//let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:francissamuelmendoza7@gmail.com');
+let transporter = nodemailer.createTransport('smtp://ame394fall2018%40gmail.com:nodemcu1234@smtp.gmail.com');
 //-----------------------------------------------------------------------------------------------------
 var MS = require("mongoskin");
 var express = require("express");
@@ -21,7 +22,7 @@ var VALUEh = 0;
 var VALUEtime = 0;
 var tempCheck = 0;
 //-----------------------------------------------------------------------------------------------------
-//var db = MS.db("mongodb://root:46Jl57IDy3Ji@127.0.0.1:27017/sensorData")
+//var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 var db = MS.db("mongodb://root:OfaZ13Q6DERS@localhost:27017/sensorData");
 app.get("/", function (req, res)
 {
@@ -91,7 +92,7 @@ app.get("/setValue", function (req, res)
 	};
 
   //Condition for sensor to trip after 100*F
-	if(VALUEt > 100)
+	if(VALUEt > 10)
   {
         var date = new Date(); // get the current date.
         if(date.getTime() >= (tempCheck + 300000))
@@ -109,7 +110,7 @@ app.get("/setValue", function (req, res)
 //FUNCTION: sendEmail
 function sendEmail(temp, time)
 {
-  var message =
+  let message =
   {
       // Comma separated list of recipients
       to: 'Francis Mendoza <francissamuelmendoza7@gmail.com>',
