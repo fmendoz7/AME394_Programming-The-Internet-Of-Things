@@ -19,12 +19,14 @@ function getDataFromServer()
     var timeValue = timeSelect.options[timeSelect.selectedIndex].value;
     var from = to - (timeValue * 60000);
     var url = "./getData?from=" + from + "&to=" + to;
-	var callback = function(data){
+	var callback = function(data)
+	{
 	    console.log(data);
 		var obj = JSON.parse(data);
 		console.log(obj);
 		var columns = [["x"],["Temperature"],["Humidity"]];
-		for(var i = 0; i < obj.length; i++){
+		for(var i = 0; i < obj.length; i++)
+		{
 		    console.log('added data');
 			var timestamp = parseInt(obj[i].time);
 			columns[0].push(getTSInFormat(timestamp));
@@ -50,12 +52,16 @@ function getDataFromServer()
 	};
 	loadFile(url, callback);
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------
 function getTSInFormat(t)
 {
 	var x = new Date(t);
 	return x.getFullYear() + "-" + (x.getMonth()+1) + "-" + x.getDate() + "T" + x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
 }
-function start(){
+
+function start()
+{
 	calendar = flatpickr("#datetimeSelect", {
 	    enableTime: true,
     	dateFormat: "Y-m-d H:i",
