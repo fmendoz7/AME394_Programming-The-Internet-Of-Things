@@ -1,6 +1,5 @@
 <html>
 <head>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.6.8/c3.min.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.6.8/c3.min.js"></script>
@@ -9,92 +8,52 @@
 
 <script src='asyncReq.js'></script>
 <script>
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+var chart;
+var lastAddedTS = 0;
+var calendar;
 
-
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function getDataFromServer()
 {
-   	var selectDate = new Date(document.getElementById('userDate').value).getTime();
-   	console.log(selectDate);
-   	selectDate = selectDate + (3600000 * 24);
-	var	from = selectDate - (3600000 * 17);
-   	console.log(from);
-    var to = selectDate + (3600000 * 7);
-    console.log(to);
-
-	var url = "./getAverage?from=" + from + "&to=" + to;
-	console.log(url);
-
-	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	//nA: var within getDataFromServer
-	var to = new Date(calendar.altInput.value).getTime();
-	var timeSelect = document.getElementById("duration");
-	var timeValue = timeSelect.options[timeSelect.selectedIndex].value;
-	var from = to - (timeValue * 60000);
-	var url = "./getData?from=" + from + "&to=" + to;
-	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+    var to = new Date(calendar.altInput.value).getTime();
+    var timeSelect = document.getElementById("duration");
+    var timeValue = timeSelect.options[timeSelect.selectedIndex].value;
+    var from = to - (timeValue * 60000);
+    var url = "./getData?from=" + from + "&to=" + to;
 	var callback = function(data)
 	{
-		console.log(data, typeof data);
-		var args = data.split(" ");
-		console.log(args);
-		var t = args[0];
-		var h = args[1];
-		var time = args[2];
-		var temp = parseInt(t);
-		temp = temp.toFixed(2);
-		var hum = parseInt(h);
-		hum = hum.toFixed(2);
-
-		//nA: my var output
-		var output =
-		"<h2> -- Current Temperature -- </h2> <p>" + currentTemp + " &deg; F</p>"+
-		"<h2> -- Current Humidity -- </h2> <p>" + currentHum + " %</p>" +
-		"<h2> -- Average Temperature -- </h2> <p>" + temp.toString() + " &deg; F</p>"+
-		"<h2> -- Average Humidity -- </h2> <p>" + hum + " %</p>"+
-		"<p> at " + new Date(parseInt(time)).toDateString() + "</p>";
-
-		document.getElementById("data").innerHTML = output;
-
-		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		//nA: graphHistorical stuff
-		console.log(data);
+	    console.log(data);
 		var obj = JSON.parse(data);
 		console.log(obj);
 		var columns = [["x"],["Temperature"],["Humidity"]];
 		for(var i = 0; i < obj.length; i++)
 		{
-				console.log('added data');
+		    console.log('added data');
 			var timestamp = parseInt(obj[i].time);
 			columns[0].push(getTSInFormat(timestamp));
 			columns[1].push(obj[i].t || 0);
 			columns[2].push(obj[i].h || 0);
 		}
-				chart = c3.generate({
-						bindto: '#data',
-						data: {
-								x: 'x',
-								xFormat: '%Y-%m-%dT%H:%M:%S',
-								columns: columns
-						},
-						axis: {
-								x: {
-										type: 'timeseries',
-										tick: {
-												format: '%H:%M:%S,%Y-%m-%d',
-										}
-								}
-						}
-				});
-		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	}
+        chart = c3.generate({
+            bindto: '#data',
+            data: {
+                x: 'x',
+                xFormat: '%Y-%m-%dT%H:%M:%S',
+                columns: columns
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%H:%M:%S,%Y-%m-%d',
+                    }
+                }
+            }
+        });
+	};
 	loadFile(url, callback);
 }
 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//nA: graphHistorical
+//-------------------------------------------------------------------------------------------------------------------------------
 function getTSInFormat(t)
 {
 	var x = new Date(t);
@@ -154,14 +113,20 @@ function start()
     };
 	//setInterval("getDataFromServer()", 1000);
 }
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 </script>
 </head>
 
-<body style='text-align:center; font-family:Helvetica' onload='getDataFromServer()'>
-	<h1> Weather </h1>
-	<input type="date" id='userDate' onchange="getDataFromServer()">
+<body style='text-align:center; font-family:Helvetica' onload='start()'>
+	<h1> Weather Historical Data </h1>
+
+	<input id='datetimeSelect' type='text'>
+	<select id='duration'>
+		<option value='10'> last 10 mins </option>
+		<option value='30'> last 30 mins </option>
+		<option value='60'> last hour </option>
+	</select>
 	<div id='data'></div>
 
 </body>
