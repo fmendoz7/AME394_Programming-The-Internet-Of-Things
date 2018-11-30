@@ -41,8 +41,11 @@ SimpleDHT11 dht11(pinDHT11);
 //const char* ssid     = "Tejaswi2";
 //const char* password = "12345678";
 
-const char* ssid     = "Vista Del Sol";
-const char* password = "HanchiBoy77**";
+/*const char* ssid     = "Vista Del Sol";
+const char* password = "HanchiBoy77**";*/
+
+const char* ssid     = "Francis's iPhone";
+const char* password = "123456789";
 
 /*const char* ssid     = "asu";
 const char* password = "HanchiBoy77***";*/
@@ -260,5 +263,6 @@ void loop()
      digitalWrite(Pin3, LOW); 
    break;
    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+}
 }
 
