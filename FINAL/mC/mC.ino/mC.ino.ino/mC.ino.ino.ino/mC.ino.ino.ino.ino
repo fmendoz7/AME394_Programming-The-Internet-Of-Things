@@ -27,11 +27,11 @@ SimpleDHT11 dht11(pinDHT11);
   //Preprocessor command that enables Wifi connection
 
 //CREATE WIFI NETWORK AND PASSWORD THAT LIMITS ACCESS TO WEBPAGE
-/*const char* ssid     = "Tejaswi2";
-const char* password = "12345678";*/
+const char* ssid     = "Tejaswi2";
+const char* password = "12345678";
 
-const char* ssid     = "Vista Del Sol";
-const char* password = "HanchiBoy77**";
+/*const char* ssid     = "Vista Del Sol";
+const char* password = "HanchiBoy77**";*/
 
 /*const char* ssid     = "asu";
 const char* password = "HanchiBoy77***";*/
@@ -47,11 +47,31 @@ const char* password = "12345678";*/
 //IP ADDRESS FOR AWS LIGHTSAIL INSTANCE OF SERVER
 const char* host = "34.222.19.236";
 
+//FINAL nA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#include <Servo.h>
+Servo needle;
+
+int needleValT = 0;
+int needleValH = 0;
+
+int tLight = D6;
+int hLight = D8;
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //-----------------------------------------------------------
 void setup()
 {
   Serial.begin(115200);
   // initialize the LCD
+
+  //FINAL nA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    needle.attach(D7);
+
+    pinMode(tLight, OUTPUT);
+    pinMode(hLight, OUTPUT);
+  
+    pinMode(D3, INPUT_PULLUP);
+    pinMode(D5, INPUT_PULLUP);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   lcd.begin();
   lcd.backlight();
 
@@ -86,6 +106,10 @@ void setup()
 
   //#####################################
 }
+
+  //FINAL nA
+  int buttonHState = 0;
+  int buttonTState = 0;
 //-----------------------------------------------------------
 void print2Screen(String s1, String s2)
 {
@@ -121,6 +145,42 @@ void loop()
 
   print2Screen("TEMP:" + String(t) + " *F", "HUM: " + String(humidity) + " %");
 
+  //FINAL nA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      needleValT = map(t, 0, 100, 30, 150);
+      needleValH = map(h, 0, 100, 30, 150);
+    
+      int buttonT = digitalRead(D3);
+      Serial.println(buttonT);
+    
+      int buttonH = digitalRead(D5);
+      Serial.println(buttonH);
+      
+      if (buttonT == 1) {  
+        buttonTState = 1;
+        buttonHState = 0;
+      }
+    
+      if (buttonH == 1) {  
+        buttonHState = 1;
+        buttonTState = 0;
+      }
+    
+      if(buttonTState == 1){
+          needle.write(needleValT);
+        digitalWrite(tLight, HIGH);
+        digitalWrite(hLight, LOW); 
+      }
+    
+      else{
+        needle.write(needleValH);
+        digitalWrite(hLight, HIGH);
+        digitalWrite(tLight, LOW);
+      }
+    
+    Serial.println("h");
+    Serial.println(buttonHState); Serial.println("t");
+    Serial.println(buttonTState);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // DHT11 sampling rate is 1HZ.
   delay(1500);
  //################################################
